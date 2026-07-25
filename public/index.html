@@ -59,6 +59,15 @@
             <input id="emailFragment" name="emailFragment" placeholder="leave blank to collect any public email" />
           </label>
           <label>
+            Google Sheet ID
+            <input
+              id="spreadsheetId"
+              name="spreadsheetId"
+              value="1QwytHnqYN4dJ2OP3p9dxfaoiUrxCyHv3CtfOHrDpTEY"
+              placeholder="Google Sheet ID"
+            />
+          </label>
+          <label>
             Search pages
             <input id="maxSearchPages" name="maxSearchPages" type="number" min="1" max="10" value="1" />
           </label>
@@ -96,12 +105,11 @@
                 <th>Phone</th>
                 <th>Region</th>
                 <th>Experience</th>
-                <th>Source page</th>
               </tr>
             </thead>
             <tbody id="resultsBody">
               <tr>
-                <td colspan="8" class="empty">No results yet.</td>
+                <td colspan="7" class="empty">No results yet.</td>
               </tr>
             </tbody>
           </table>

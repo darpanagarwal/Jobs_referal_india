@@ -10,6 +10,7 @@ const { normalizeExportRows } = require("./export-utils");
 
 const app = express();
 const port = Number(process.env.PORT || 3000);
+const defaultSpreadsheetId = "1QwytHnqYN4dJ2OP3p9dxfaoiUrxCyHv3CtfOHrDpTEY";
 const jobs = new Map();
 
 function createJobId() {
@@ -181,7 +182,7 @@ app.post("/api/export/sheets", async (req, res) => {
   try {
     const rows = normalizeExportRows(req.body.rows);
     const spreadsheetId =
-      req.body.spreadsheetId || process.env.GOOGLE_SHEETS_SPREADSHEET_ID;
+      req.body.spreadsheetId || process.env.GOOGLE_SHEETS_SPREADSHEET_ID || defaultSpreadsheetId;
     const sheetName = String(req.body.sheetName || "Leads");
 
     const result = await appendRowsToGoogleSheet({

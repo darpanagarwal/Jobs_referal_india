@@ -81,7 +81,7 @@ function proxyUrl(url) {
   return `https://r.jina.ai/http://${url.replace(/^https?:\/\//i, "")}`;
 }
 
-async function fetchProxyText(url, timeoutMs = 12000) {
+async function fetchProxyText(url, timeoutMs = 20000) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
 
@@ -186,7 +186,7 @@ async function collectSearchResults(keyword, maxSearchPages, source = "public") 
         pageIndex === 0
           ? `https://www.bing.com/search?q=${encodeURIComponent(query)}`
           : `https://www.bing.com/search?q=${encodeURIComponent(query)}&first=${pageIndex * 10}`;
-      const markdown = await fetchProxyText(searchUrl, 10000);
+      const markdown = await fetchProxyText(searchUrl, 20000);
       const parsed = parseBingSearchMarkdown(markdown, query, pageIndex + 1);
       pagesChecked += 1;
 
@@ -232,7 +232,7 @@ function extractExternalLinksFromMarkdown(markdown, baseUrl, limit = 3) {
 async function fetchSiteDetails(url, emailFragment, source = "public") {
   const visited = [];
   const details = [];
-  const rootMarkdown = await fetchProxyText(url, 10000);
+  const rootMarkdown = await fetchProxyText(url, 20000);
   visited.push(url);
 
   const rootContactLinks =
@@ -256,7 +256,7 @@ async function fetchSiteDetails(url, emailFragment, source = "public") {
     }
 
     try {
-      const pageText = await fetchProxyText(pageUrl, 8000);
+      const pageText = await fetchProxyText(pageUrl, 15000);
       visited.push(pageUrl);
       const { emails, phones } = extractContactDetailsFromText(pageText, pageText, emailFragment);
       if (emails.length || phones.length) {
@@ -294,7 +294,7 @@ async function scrapeLeads({
         pageIndex === 0
           ? `https://www.bing.com/search?q=${encodeURIComponent(query)}${searchFreshnessParam(maxAgeHours)}`
           : `https://www.bing.com/search?q=${encodeURIComponent(query)}&first=${pageIndex * 10}${searchFreshnessParam(maxAgeHours)}`;
-      const markdown = await fetchProxyText(searchUrl, 10000);
+      const markdown = await fetchProxyText(searchUrl, 20000);
       const parsed = parseBingSearchMarkdown(markdown, query, pageIndex + 1);
       searchPagesChecked += 1;
 

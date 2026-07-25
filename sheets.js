@@ -29,9 +29,11 @@ async function appendRowsToGoogleSheet({ spreadsheetId, rows, sheetName = "Leads
     row.website,
     row.title,
     row.email,
-    row.sourcePage,
+    row.phone,
+    row.region,
+    row.experience,
   ]);
-  const headers = [["Keyword", "Website", "Title", "Email", "Source Page"]];
+  const headers = [["Keyword", "Website", "Title", "Email", "Phone", "Region", "Experience"]];
 
   if (!values.length) {
     return { updatedRows: 0 };
@@ -39,13 +41,13 @@ async function appendRowsToGoogleSheet({ spreadsheetId, rows, sheetName = "Leads
 
   const existing = await sheets.spreadsheets.values.get({
     spreadsheetId,
-    range: `${sheetName}!A1:E1`,
+    range: `${sheetName}!A1:G1`,
   });
 
   if (!existing.data.values || existing.data.values.length === 0) {
     await sheets.spreadsheets.values.update({
       spreadsheetId,
-      range: `${sheetName}!A1:E1`,
+      range: `${sheetName}!A1:G1`,
       valueInputOption: "RAW",
       requestBody: {
         values: headers,
@@ -55,7 +57,7 @@ async function appendRowsToGoogleSheet({ spreadsheetId, rows, sheetName = "Leads
 
   await sheets.spreadsheets.values.append({
     spreadsheetId,
-    range: `${sheetName}!A:E`,
+    range: `${sheetName}!A:G`,
     valueInputOption: "RAW",
     insertDataOption: "INSERT_ROWS",
     requestBody: {

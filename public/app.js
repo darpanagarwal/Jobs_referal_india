@@ -16,7 +16,7 @@ let activePoll = null;
 
 function renderRows(rows) {
   if (!rows.length) {
-    resultsBody.innerHTML = '<tr><td colspan="6" class="empty">No results yet.</td></tr>';
+    resultsBody.innerHTML = '<tr><td colspan="7" class="empty">No results yet.</td></tr>';
     resultCount.textContent = "0 rows";
     return;
   }
@@ -32,7 +32,6 @@ function renderRows(rows) {
         <td>${escapeHtml(row.phone || "")}</td>
         <td>${escapeHtml(row.region || "")}</td>
         <td>${escapeHtml(row.experience || "")}</td>
-        <td><a href="${escapeAttr(row.sourcePage || "#")}" target="_blank" rel="noreferrer">${escapeHtml(row.sourcePage || "")}</a></td>
       </tr>`
     )
     .join("");
@@ -131,6 +130,7 @@ form.addEventListener("submit", async (event) => {
   const payload = {
     keyword: document.getElementById("keyword").value.trim(),
     emailFragment: document.getElementById("emailFragment").value.trim(),
+    spreadsheetId: document.getElementById("spreadsheetId").value.trim(),
     source: document.getElementById("source").value,
     maxSearchPages: Number(document.getElementById("maxSearchPages").value || 1),
     maxWebsites: Number(document.getElementById("maxWebsites").value || 3),
@@ -183,7 +183,10 @@ downloadExcel.addEventListener("click", async () => {
 saveSheets.addEventListener("click", async () => {
   if (!lastResults.length) return;
   try {
-    const response = await postJson("/api/export/sheets", { rows: lastResults });
+    const response = await postJson("/api/export/sheets", {
+      rows: lastResults,
+      spreadsheetId: document.getElementById("spreadsheetId").value.trim(),
+    });
     const data = await response.json();
     statusEl.textContent = `Saved ${data.updatedRows || 0} row${(data.updatedRows || 0) === 1 ? "" : "s"} to Google Sheets.`;
   } catch (error) {
