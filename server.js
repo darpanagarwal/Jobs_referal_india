@@ -38,6 +38,7 @@ function startScrapeJob(payload) {
 
   jobs.set(jobId, job);
 
+  const estimatedTimeoutMs = Math.max(120000, Number(payload.maxWebsites || 0) * 45000);
   const timeout = setTimeout(() => {
     if (job.status !== "running") {
       return;
@@ -45,7 +46,7 @@ function startScrapeJob(payload) {
     job.status = "error";
     job.error = "Scrape timed out.";
     job.finishedAt = new Date().toISOString();
-  }, 120000);
+  }, estimatedTimeoutMs);
 
   (async () => {
     try {
