@@ -38,15 +38,18 @@ function startScrapeJob(payload) {
 
   jobs.set(jobId, job);
 
-  const estimatedTimeoutMs = Math.max(120000, Number(payload.maxWebsites || 0) * 45000);
-  const timeout = setTimeout(() => {
-    if (job.status !== "running") {
-      return;
-    }
-    job.status = "error";
-    job.error = "Scrape timed out.";
-    job.finishedAt = new Date().toISOString();
-  }, estimatedTimeoutMs);
+  const timeoutMs = Number(process.env.SCRAPE_TIMEOUT_MS || 0);
+  const timeout =
+    timeoutMs > 0
+      ? setTimeout(() => {
+          if (job.status !== "running") {
+            return;
+          }
+          job.status = "error";
+          job.error = "Scrape timed out.";
+          job.finishedAt = new Date().toISOString();
+        }, timeoutMs)
+      : null;
 
   (async () => {
     try {
@@ -69,7 +72,9 @@ function startScrapeJob(payload) {
       job.status = "error";
       job.error = error.message || "Scrape failed.";
     } finally {
-      clearTimeout(timeout);
+      if (timeout) {
+        clearTimeout(timeout);
+      }
       if (!job.finishedAt) {
         job.finishedAt = new Date().toISOString();
       }

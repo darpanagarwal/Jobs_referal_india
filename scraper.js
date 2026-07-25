@@ -37,6 +37,9 @@ function linkedinSearchVariants(keyword) {
   const base = keyword.trim();
   const queries = [];
   const seen = new Set();
+  const priorityRegions = LINKEDIN_PRIORITY_REGIONS.slice(0, 4);
+  const fallbackRegions = LINKEDIN_OTHER_REGIONS.slice(0, 3);
+  const hrTerms = HR_TERMS.slice(0, 3);
 
   const add = (query) => {
     const normalized = query.trim();
@@ -45,17 +48,16 @@ function linkedinSearchVariants(keyword) {
     queries.push(normalized);
   };
 
-  for (const region of LINKEDIN_PRIORITY_REGIONS) {
-    for (const hrTerm of HR_TERMS) {
+  for (const region of priorityRegions) {
+    for (const hrTerm of hrTerms) {
       add(`site:linkedin.com/posts "${base}" "${region}" "${hrTerm}" email`);
       add(`site:linkedin.com/feed/update "${base}" "${region}" "${hrTerm}" email`);
       add(`site:linkedin.com/company "${base}" "${region}" "${hrTerm}" email`);
-      add(`site:linkedin.com/in "${base}" "${region}" "${hrTerm}" email`);
     }
   }
 
-  for (const region of LINKEDIN_OTHER_REGIONS) {
-    for (const hrTerm of HR_TERMS) {
+  for (const region of fallbackRegions) {
+    for (const hrTerm of hrTerms.slice(0, 2)) {
       add(`site:linkedin.com/posts "${base}" "${region}" "${hrTerm}" email`);
       add(`site:linkedin.com/feed/update "${base}" "${region}" "${hrTerm}" email`);
     }
@@ -66,7 +68,7 @@ function linkedinSearchVariants(keyword) {
   add(`site:linkedin.com/jobs "${base}" email`);
   add(`site:linkedin.com/company "${base}" hiring email`);
 
-  return queries;
+  return queries.slice(0, 18);
 }
 
 const SEARCH_VARIANTS = (keyword, source = "public") => {
