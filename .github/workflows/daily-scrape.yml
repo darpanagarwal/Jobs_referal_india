@@ -1,0 +1,57 @@
+name: Daily LinkedIn Scrape
+
+on:
+  schedule:
+    - cron: "30 3 * * *"
+    - cron: "30 15 * * *"
+  workflow_dispatch:
+    inputs:
+      keyword:
+        description: "Search keyword"
+        required: false
+        default: "hiring"
+      source:
+        description: "Search source"
+        required: false
+        default: "linkedin"
+      maxAgeHours:
+        description: "Maximum age in hours"
+        required: false
+        default: "12"
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run scraper
+        env:
+          INPUT_KEYWORD: ${{ github.event.inputs.keyword }}
+          INPUT_SOURCE: ${{ github.event.inputs.source }}
+          INPUT_MAX_AGE_HOURS: ${{ github.event.inputs.maxAgeHours }}
+          SCRAPE_MAX_SEARCH_PAGES: "3"
+          SCRAPE_MAX_WEBSITES: "200"
+        run: |
+          KEYWORD="${INPUT_KEYWORD:-hiring}"
+          SOURCE="${INPUT_SOURCE:-linkedin}"
+          MAX_AGE_HOURS="${INPUT_MAX_AGE_HOURS:-12}"
+          node scripts/run-scrape.js --keyword "$KEYWORD" --source "$SOURCE" --max-age-hours "$MAX_AGE_HOURS" --max-search-pages 3 --max-websites 200 --output "exports/github-actions-linkedin.xlsx"
+
+      - name: Upload workbook
+        uses: actions/upload-artifact@v4
+        with:
+          name: linkedin-scrape-workbook
+          path: exports/github-actions-linkedin.xlsx
