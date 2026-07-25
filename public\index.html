@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Webscrapper</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="panel hero">
+        <div>
+          <p class="eyebrow">Lead finder</p>
+          <h1>Webscrapper</h1>
+          <p class="subcopy">
+            Search public business websites, find contact emails and phone numbers,
+            and export the results to CSV, Excel, or Google Sheets.
+          </p>
+        </div>
+        <div class="metrics">
+          <div class="metric">
+            <span id="searchPagesChecked">0</span>
+            <label>Search pages checked</label>
+          </div>
+          <div class="metric">
+            <span id="websitesChecked">0</span>
+            <label>Websites checked</label>
+          </div>
+          <div class="metric">
+            <span id="pagesChecked">0</span>
+            <label>Pages checked</label>
+          </div>
+          <div class="metric">
+            <span id="emailsFound">0</span>
+            <label>Emails found</label>
+          </div>
+          <div class="metric">
+            <span id="phonesFound">0</span>
+            <label>Phones found</label>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel form-panel">
+        <form id="scrapeForm" class="form-grid">
+          <label>
+            Keyword
+            <input id="keyword" name="keyword" placeholder="software engineer" required />
+          </label>
+          <label>
+            Source
+            <select id="source" name="source">
+              <option value="linkedin" selected>LinkedIn public posts</option>
+              <option value="public">Public websites</option>
+            </select>
+          </label>
+          <label>
+            Email fragment
+            <input id="emailFragment" name="emailFragment" placeholder="leave blank to collect any public email" />
+          </label>
+          <label>
+            Search pages
+            <input id="maxSearchPages" name="maxSearchPages" type="number" min="1" max="10" value="1" />
+          </label>
+          <label>
+            Target rows
+            <input id="maxWebsites" name="maxWebsites" type="number" min="1" max="500" value="200" />
+          </label>
+          <label>
+            Max age hours
+            <input id="maxAgeHours" name="maxAgeHours" type="number" min="1" max="168" value="12" />
+          </label>
+          <div class="actions">
+            <button type="submit" class="primary">Run scraper</button>
+            <button type="button" id="downloadCsv" class="secondary" disabled>Download CSV</button>
+            <button type="button" id="downloadExcel" class="secondary" disabled>Download Excel</button>
+            <button type="button" id="saveSheets" class="secondary" disabled>Save to Sheets</button>
+          </div>
+        </form>
+        <p id="status" class="status">Ready.</p>
+      </section>
+
+      <section class="panel table-panel">
+        <div class="table-head">
+          <h2>Results</h2>
+          <span id="resultCount">0 rows</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Keyword</th>
+                <th>Website</th>
+                <th>Title</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Region</th>
+                <th>Experience</th>
+                <th>Source page</th>
+              </tr>
+            </thead>
+            <tbody id="resultsBody">
+              <tr>
+                <td colspan="8" class="empty">No results yet.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+    <script src="/app.js"></script>
+  </body>
+ </html>
