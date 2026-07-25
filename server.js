@@ -80,6 +80,10 @@ function startScrapeJob(payload) {
 app.use(express.json({ limit: "2mb" }));
 app.use(express.static(path.join(__dirname, "public")));
 
+app.get("/", (_req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
 app.post("/api/scrape", async (req, res) => {
   try {
     const keyword = String(req.body.keyword || "").trim();
